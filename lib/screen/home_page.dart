@@ -11,17 +11,17 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MenuStream.obtieneItemsMenu(); // cargo la lista de platos
-
+    final Color colorPrincipal = Color.fromRGBO(73, 144, 171, 1);
     return Scaffold(
       appBar: AppBar(
         title: Text('Platos del Menú'),
-        backgroundColor: Color.fromRGBO(73, 144, 171, 1),
+        backgroundColor: colorPrincipal,
         actions: [
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              primary: Color.fromRGBO(73, 144, 171, 1),
+              primary: colorPrincipal,
             ),
-            onPressed: (() async {
+            onPressed: (() {
               preferencias.setNombreUsuario = '';
               Navigator.pushNamedAndRemoveUntil(
                   context, 'inicio', (route) => false);
@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-        color: Color.fromRGBO(73, 144, 171, 1),
+        color: colorPrincipal,
         child: Row(
           children: [
             Container(
@@ -113,13 +113,8 @@ class _Dismissible extends StatelessWidget {
               title: Text("Confirma"),
               content: Text("Está seguro que desea eliminar el plato?"),
               actions: <Widget>[
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text("ELIMINAR")),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text("CANCELAR"),
-                ),
+                TextBut(textoBut: 'ELIMINAR'),
+                TextBut(textoBut: 'CANCELAR'),
               ],
             );
           },
@@ -176,5 +171,18 @@ class _Dismissible extends StatelessWidget {
         image: AssetImage('assets/delete.gif'),
       ), //Icon(Icons.delete_forever),
     );
+  }
+}
+
+class TextBut extends StatelessWidget {
+  const TextBut({
+    required this.textoBut,
+  });
+  final textoBut;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () => Navigator.of(context).pop(true),
+        child: Text(textoBut));
   }
 }

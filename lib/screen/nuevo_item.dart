@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -31,6 +29,8 @@ class _NuevoItemPageState extends State<NuevoItemPage> {
     final Map<String, dynamic> datos =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
+    final Color colorPrincipal = Color.fromRGBO(73, 144, 171, 1);
+
     if (datos['codigo'].length > 0) {
       _codigoController.text = datos['codigo'];
       _descripcionController.text = datos['descripcion'];
@@ -47,12 +47,12 @@ class _NuevoItemPageState extends State<NuevoItemPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(73, 144, 171, 1),
+        backgroundColor: colorPrincipal,
         title: Text(tituloAppBar, style: TextStyle(fontSize: 17)),
         actions: [
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              primary: Color.fromRGBO(73, 144, 171, 1),
+              primary: colorPrincipal,
             ),
             onPressed: (() async {
               (modificando) ? modifImagen = true : modifImagen = false;
@@ -105,7 +105,7 @@ class _NuevoItemPageState extends State<NuevoItemPage> {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-        color: Color.fromRGBO(73, 144, 171, 1),
+        color: colorPrincipal,
         child: Row(
           children: [
             Container(
@@ -116,7 +116,7 @@ class _NuevoItemPageState extends State<NuevoItemPage> {
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: Color.fromRGBO(31, 107, 38, 1),
-          onPressed: () async {
+          onPressed: () {
             if (_formKey.currentState!.validate()) {
               final nuevoItem = MenuModelo(
                   codigo: _codigoController.text,
@@ -145,24 +145,22 @@ class _NuevoItemPageState extends State<NuevoItemPage> {
         builder: (BuildContext context) {
           return AlertDialog(
               title: Text("Seleccione de donde va a tomar la imagen?"),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    GestureDetector(
-                      child: Text("Galería"),
-                      onTap: () {
-                        _openGallery(context);
-                      },
-                    ),
-                    Padding(padding: EdgeInsets.all(8.0)),
-                    GestureDetector(
-                      child: Text("Cámara"),
-                      onTap: () {
-                        _openCamera(context);
-                      },
-                    )
-                  ],
-                ),
+              content: ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                    child: Text("Galería"),
+                    onTap: () {
+                      _openGallery(context);
+                    },
+                  ),
+                  Padding(padding: EdgeInsets.all(8.0)),
+                  GestureDetector(
+                    child: Text("Cámara"),
+                    onTap: () {
+                      _openCamera(context);
+                    },
+                  )
+                ],
               ));
         });
   }
@@ -218,92 +216,76 @@ class _TextForms extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextFormField(
-              readOnly: modificando,
-              controller: _codigoController,
-              validator: (value) {
-                if (value == null || value.length < 1)
-                  return 'El código es obligatorio';
-              },
-              decoration: _inputDecoration('Código del plato'),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: _descripcionController,
-              validator: (value) {
-                if (value == null || value.length < 1)
-                  return 'El nombre es obligatorio';
-              },
-              decoration: _inputDecoration('Nombre del plato'),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              controller: _precioController,
-              validator: (value) {
-                if (value == null || value.length < 1)
-                  return 'El precio es obligatorio';
-              },
-              decoration: _inputDecoration('Precio del plato'),
-            )
-          ],
-        ),
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          TexForm(
+              modificando: modificando,
+              codigoController: _codigoController,
+              labelText: 'Código del plato'),
+          SizedBox(
+            height: 10,
+          ),
+          TexForm(
+              modificando: modificando,
+              codigoController: _descripcionController,
+              labelText: 'Nombre del plato'),
+          SizedBox(
+            height: 10,
+          ),
+          TexForm(
+              modificando: modificando,
+              codigoController: _precioController,
+              labelText: 'Precio del plato'),
+        ],
       ),
     );
   }
+}
 
-  InputDecoration _inputDecoration(String labelText) {
+class TexForm extends StatelessWidget {
+  const TexForm({
+    Key? key,
+    required this.modificando,
+    required TextEditingController codigoController,
+    required this.labelText,
+  })  : _codigoController = codigoController,
+        super(key: key);
+
+  final bool modificando;
+  final TextEditingController _codigoController;
+  final String labelText;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      readOnly: modificando,
+      controller: _codigoController,
+      validator: (value) {
+        if (value == null || value.length < 1) return 'El campo es obligatorio';
+      },
+      decoration: _inputDecoration(labelText),
+    );
+  }
+
+  _inputDecoration(String labelText) {
+    final InputBorder _outLineInputBorder = OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Color(0xFFB35214),
+        width: 2.0,
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+    );
     String label = labelText;
     return InputDecoration(
       labelText: label,
       contentPadding: EdgeInsets.only(left: 20),
       fillColor: Colors.white,
       filled: true,
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color(0xFFB35214),
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color(0xFFB35214),
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color(0xFFB35214),
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color(0xFFB35214),
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
-        ),
-      ),
+      enabledBorder: _outLineInputBorder,
+      focusedBorder: _outLineInputBorder,
+      errorBorder: _outLineInputBorder,
+      focusedErrorBorder: _outLineInputBorder,
     );
   }
 }
