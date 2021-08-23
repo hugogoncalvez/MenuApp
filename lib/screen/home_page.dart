@@ -14,7 +14,10 @@ class HomePage extends StatelessWidget {
     final Color colorPrincipal = Color.fromRGBO(73, 144, 171, 1);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Platos del Menú'),
+        centerTitle: true,
+        title: Image(
+          image: AssetImage('assets/menu-label.png'),
+        ),
         backgroundColor: colorPrincipal,
         actions: [
           ElevatedButton.icon(
