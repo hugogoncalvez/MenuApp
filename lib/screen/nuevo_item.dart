@@ -267,8 +267,7 @@ class TextFields extends StatelessWidget {
       readOnly: modificando ?? false,
       controller: _codigoController,
       validator: (value) {
-        if (value == null || value.length < 1)
-          return 'El código es obligatorio';
+        if (value == null || value.length < 1) return 'El campo es obligatorio';
       },
       decoration: _inputDecoration(label),
     );
