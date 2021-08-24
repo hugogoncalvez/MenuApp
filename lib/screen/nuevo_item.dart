@@ -220,26 +220,24 @@ class TextForms extends StatelessWidget {
         child: Column(
           children: [
             TextFields(
-              modificando: modificando,
-              codigoController: _codigoController,
-              label: 'Código del plato',
-            ),
+                modificando: modificando,
+                codigoController: _codigoController,
+                label: 'Código del plato',
+                teclado: TextInputType.text),
             SizedBox(
               height: 10,
             ),
             TextFields(
-              modificando: modificando,
-              codigoController: _descripcionController,
-              label: 'Nombre del plato',
-            ),
+                codigoController: _descripcionController,
+                label: 'Nombre del plato',
+                teclado: TextInputType.text),
             SizedBox(
               height: 10,
             ),
             TextFields(
-              modificando: modificando,
-              codigoController: _precioController,
-              label: 'Precio del plato',
-            ),
+                codigoController: _precioController,
+                label: 'Precio del plato',
+                teclado: TextInputType.number),
           ],
         ),
       ),
@@ -250,20 +248,23 @@ class TextForms extends StatelessWidget {
 class TextFields extends StatelessWidget {
   const TextFields({
     Key? key,
-    required this.modificando,
+    this.modificando,
     required TextEditingController codigoController,
     required this.label,
+    required this.teclado,
   })  : _codigoController = codigoController,
         super(key: key);
 
-  final bool modificando;
+  final bool? modificando;
   final TextEditingController _codigoController;
   final String label;
+  final TextInputType teclado;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      readOnly: modificando,
+      keyboardType: teclado,
+      readOnly: modificando ?? false,
       controller: _codigoController,
       validator: (value) {
         if (value == null || value.length < 1)
